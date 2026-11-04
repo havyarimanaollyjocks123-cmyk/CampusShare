@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Catalogue - CampusShare{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h2>Explorer le catalogue</h2>
+    <span style="color: var(--text-light);">{{ ressources.count }} document(s) trouvé(s)</span>
+</div>
+
+<!-- Barre de recherche et filtres -->
+<div class="form-card" style="max-width: 100%; padding: 1.5rem; margin-bottom: 2rem;">
+    <form method="get" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; align-items: end;">
+        
+        <div class="form-group" style="margin: 0;">
+            <label>Recherche</label>
+            <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Titre, mot-clé...">
+        </div>
+        
+        <div class="form-group" style="margin: 0;">
+            <label>Filière</label>
+            <select name="filiere" class="form-control">
+                <option value="">Toutes</option>
+                {% for f in filieres %}
+                    <option value="{{ f.id }}" {% if request.GET.filiere == f.id|stringformat:"s" %}selected{% endif %}>{{ f.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="margin: 0;">
+            <label>Niveau</label>
+            <select name="niveau" class="form-control">
+                <option value="">Tous</option>
+                {% for n in niveaux %}
+                    <option value="{{ n.id }}" {% if request.GET.niveau == n.id|stringformat:"s" %}selected{% endif %}>{{ n.libelle }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="margin: 0;">
+            <label>Année</label>
+            <input type="text" name="annee" value="{{ request.GET.annee }}" class="form-control" placeholder="ex: 2023-2024">
+        </div>
+
+        <div class="form-group" style="margin: 0;">
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Filtrer</button>
+        </div>
+    </form>
+</div>
+
+<!-- Grille de résultats -->
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+    {% for ressource in ressources %}
+        <div class="form-card" style="margin: 0; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <span style="background: var(--secondary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; color: var(--primary);">
+                    {{ ressource.get_type_document_display }}
+                </span>
+                
+                {% if ressource.badge_officiel %}
+                    <span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-left: 5px;">
+                        ✔️ Officiel
+                    </span>
+                {% endif %}
+                
+                <h3 style="margin-top: 1rem; font-size: 1.2rem;">{{ ressource.titre }}</h3>
+                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                    {{ ressource.matiere.nom }} • {{ ressource.annee_academique }}
+                </p>
+            </div>
+            
+            <div style="border-top: 1px solid var(--border); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.8rem; color: var(--text-light);">⬇️ {{ ressource.nb_telechargements }}</span>
+                <a href="{% url 'telecharger_ressource' ressource.id %}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.9rem;">Télécharger</a>
+            </div>
+        </div>
+    {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: white; border-radius: 12px;">
+            <h3>Aucune ressource trouvée</h3>
+            <p style="color: var(--text-light);">Essayez de modifier vos filtres de recherche.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

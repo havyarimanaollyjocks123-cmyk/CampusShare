@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Déposer une ressource - CampusShare{% endblock %}
+
+{% block content %}
+<div class="form-card" style="max-width: 700px;">
+    <h2>Déposer une ressource</h2>
+    <p style="color: var(--text-light); margin-bottom: 1rem; font-size: 0.9rem;">
+        Remplissez tous les champs pour aider les autres étudiants à trouver votre document.
+    </p>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span class="error-text">{{ field.errors.0 }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-block">Envoyer le document</button>
+    </form>
+</div>
+{% endblock %}

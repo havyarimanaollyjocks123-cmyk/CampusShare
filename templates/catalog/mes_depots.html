@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Mes Dépôts - CampusShare{% endblock %}
+
+{% block content %}
+<h2>Mes Dépôts</h2>
+<p>Retrouvez ici l'historique des documents que vous avez partagés.</p>
+
+<div style="margin-top: 2rem;">
+    {% for ressource in ressources %}
+        <div class="form-card" style="max-width: 100%; margin-bottom: 1rem; padding: 1.5rem; text-align: left;">
+            <h3>{{ ressource.titre }}</h3>
+            <p style="font-size: 0.9rem; color: var(--text-light);">
+                {{ ressource.matiere.nom }} - {{ ressource.annee_academique }} (Déposé le {{ ressource.date_depot|date:"d/m/Y" }})
+            </p>
+            
+            <div style="margin-top: 10px;">
+                <strong>Statut :</strong> 
+                {% if ressource.statut == 'PUBLIE' %}
+                    <span style="color: var(--success); font-weight: bold;">✅ Publié</span>
+                {% elif ressource.statut == 'EN_ATTENTE' %}
+                    <span style="color: #f59e0b; font-weight: bold;">⏳ En attente de validation</span>
+                {% else %}
+                    <span style="color: var(--danger); font-weight: bold;">❌ Rejeté</span>
+                    <p style="font-size: 0.8rem; color: var(--danger);">Motif : {{ ressource.motif_rejet }}</p>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <p>Vous n'avez déposé aucune ressource pour le moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}

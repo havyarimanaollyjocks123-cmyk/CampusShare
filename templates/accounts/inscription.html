@@ -1,0 +1,25 @@
+nmmjjjju{% extends 'base.html' %}
+{% block title %}Inscription - CampusShare{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    <h2>Créer un compte</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="help-text">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-block">S'inscrire</button>
+    </form>
+    <p class="text-center mt-3">Déjà un compte ? <a href="{% url 'connexion' %}">Connectez-vous</a></p>
+</div>
+{% endblock %}

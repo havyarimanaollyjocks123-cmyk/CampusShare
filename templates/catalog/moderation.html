@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Modération - CampusShare{% endblock %}
+
+{% block content %}
+<h2>File d'attente de modération</h2>
+<p>Voici les documents déposés par les étudiants qui attendent votre validation.</p>
+
+<div style="margin-top: 2rem;">
+    {% for ressource in ressources %}
+        <div class="form-card" style="max-width: 100%; margin-bottom: 1rem; padding: 1.5rem; text-align: left; border-left: 4px solid #f59e0b;">
+            <h3>{{ ressource.titre }}</h3>
+            <p style="font-size: 0.9rem; color: var(--text-light);">
+                <strong>Déposé par :</strong> {{ ressource.depose_par.username }} <br>
+                <strong>Matière :</strong> {{ ressource.matiere.nom }} - {{ ressource.annee_academique }}
+            </p>
+            
+            <div style="margin-top: 15px; display: flex; gap: 10px;">
+                <!-- Bouton pour voir le fichier -->
+                <a href="{{ ressource.fichier.url }}" target="_blank" class="btn btn-secondary">👁️ Voir le fichier</a>
+                
+                <!-- Boutons d'action -->
+                <a href="{% url 'action_moderation' ressource.id 'valider' %}" class="btn btn-primary" style="background-color: #22c55e;">✅ Valider</a>
+                <a href="{% url 'action_moderation' ressource.id 'rejeter' %}" class="btn btn-danger">❌ Rejeter</a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="form-card" style="text-align: center;">
+            <p>Aucune ressource en attente. 🎉</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

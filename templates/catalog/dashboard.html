@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Tableau de bord Administrateur</h2>
+<div style="display: flex; gap: 20px; margin-top: 2rem;">
+    <div class="form-card" style="flex: 1; text-align: center;">
+        <h1 style="color: var(--primary); font-size: 3rem;">{{ total_ressources }}</h1>
+        <p>Ressources publiées</p>
+    </div>
+    <div class="form-card" style="flex: 1; text-align: center;">
+        <h1 style="color: #f59e0b; font-size: 3rem;">{{ en_attente }}</h1>
+        <p>En attente de modération</p>
+    </div>
+    <div class="form-card" style="flex: 1; text-align: center;">
+        <h1 style="color: var(--success); font-size: 3rem;">{{ total_telechargements }}</h1>
+        <p>Téléchargements totaux</p>
+    </div>
+</div>
+{% endblock %}
