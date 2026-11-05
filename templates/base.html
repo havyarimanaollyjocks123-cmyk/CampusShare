@@ -9,30 +9,44 @@
 </head>
 <body>
     <nav class="navbar">
+        <!-- Logo à gauche -->
         <a href="{% url 'accueil' %}" class="logo">Campus<span>Share</span></a>
         
+        <!-- Menu à droite -->
         <div class="nav-links">
             {% if user.is_authenticated %}
+                <!-- Liens accessibles à tous les connectés -->
                 <a href="{% url 'catalogue' %}" class="nav-item">Catalogue</a>
                 <a href="{% url 'mes_depots' %}" class="nav-item">Mes Dépôts</a>
                 
+                <!-- Liens réservés aux Admins et Délégués -->
                 {% if user.role == 'ADMIN' or user.role == 'DELEGUE' or user.is_superuser %}
                     <a href="{% url 'file_attente' %}" class="nav-item">Modération</a>
+                    
                     {% if user.role == 'ADMIN' or user.is_superuser %}
                         <a href="{% url 'dashboard' %}" class="nav-item">Dashboard</a>
+                        <a href="{% url 'liste_signalements' %}" class="nav-item" style="color: var(--danger); font-weight: bold;">Signalements 🚨</a>
                     {% endif %}
                 {% endif %}
         
-                <a href="{% url 'depot_ressource' %}" class="btn btn-primary" style="margin-left: 10px;">+ Déposer</a>
+                <!-- Bouton d'action principal -->
+                <a href="{% url 'depot_ressource' %}" class="btn btn-primary" style="margin-left: 15px;">+ Déposer</a>
                 
-                <div class="dropdown" style="margin-left: 10px;">
-                    <button class="dropbtn">{{ user.first_name|default:user.username }} ▾</button>
+                <!-- Menu déroulant utilisateur -->
+                <div class="dropdown" style="margin-left: 15px;">
+                    <button class="dropbtn">
+                        <!-- Avatar circulaire avec l'initiale -->
+                        <div class="avatar">{{ user.username|first|upper }}</div>
+                        <span style="margin-left: 8px;">{{ user.first_name|default:user.username }} ▾</span>
+                    </button>
                     <div class="dropdown-content">
                         <a href="{% url 'profil' %}">Mon Profil</a>
                         <a href="{% url 'deconnexion' %}" class="text-danger">Déconnexion</a>
                     </div>
                 </div>
+                
             {% else %}
+                <!-- Menu pour les visiteurs non connectés -->
                 <a href="{% url 'catalogue' %}" class="nav-item">Catalogue</a>
                 <a href="{% url 'connexion' %}" class="btn btn-secondary">Connexion</a>
                 <a href="{% url 'inscription' %}" class="btn btn-primary">S'inscrire</a>
@@ -41,7 +55,7 @@
     </nav>
 
     <main class="container">
-        <!-- Messages Flash -->
+        <!-- Messages Flash (Succès, Erreurs, Alertes) -->
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">
@@ -50,6 +64,7 @@
             {% endfor %}
         {% endif %}
 
+        <!-- Contenu de la page -->
         {% block content %}{% endblock %}
     </main>
 

@@ -1,4 +1,4 @@
-nmmjjjju{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block title %}Inscription - CampusShare{% endblock %}
 
 {% block content %}
@@ -7,17 +7,38 @@ nmmjjjju{% extends 'base.html' %}
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
-            <div class="form-group">
-                <label>{{ field.label }}</label>
-                {{ field }}
-                {% if field.help_text %}
-                    <small class="help-text">{{ field.help_text }}</small>
-                {% endif %}
-                {% for error in field.errors %}
-                    <span class="error-text">{{ error }}</span>
-                {% endfor %}
-            </div>
+    <!-- Si c'est le champ filiere ou niveau, on lui donne une classe spéciale -->
+    <div class="form-group {% if field.name == 'filiere' or field.name == 'niveau' %}champ-etudiant{% endif %}">
+        <label>{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}
+            <small class="help-text">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+            <span class="error-text">{{ error }}</span>
         {% endfor %}
+    </div>
+{% endfor %}
+
+<!-- Le script pour cacher les champs si Enseignant -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleSelect = document.getElementById('id_role');
+        const champsEtudiants = document.querySelectorAll('.champ-etudiant');
+
+        function toggleChamps() {
+            // Si on choisit Enseignant, on cache. Sinon on affiche.
+            if (roleSelect.value === 'ENSEIGNANT') {
+                champsEtudiants.forEach(el => el.style.display = 'none');
+            } else {
+                champsEtudiants.forEach(el => el.style.display = 'block');
+            }
+        }
+
+        roleSelect.addEventListener('change', toggleChamps);
+        toggleChamps(); // Exécuter au chargement de la page
+    });
+</script>
         <button type="submit" class="btn btn-primary btn-block">S'inscrire</button>
     </form>
     <p class="text-center mt-3">Déjà un compte ? <a href="{% url 'connexion' %}">Connectez-vous</a></p>

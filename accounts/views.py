@@ -35,4 +35,13 @@ def deconnexion(request):
 
 @login_required
 def profil(request):
+    if request.method == 'POST':
+        # On récupère la photo envoyée
+        photo = request.FILES.get('photo_profil')
+        if photo:
+            request.user.photo_profil = photo
+            request.user.save()
+            messages.success(request, "Votre photo de profil a été mise à jour !")
+            return redirect('profil')
+            
     return render(request, 'accounts/profil.html')

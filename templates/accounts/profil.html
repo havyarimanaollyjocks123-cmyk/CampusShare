@@ -4,6 +4,7 @@
 {% block content %}
 <div class="form-card">
     <h2>Mon Profil</h2>
+    <hr style="margin: 2rem 0; border: 0; border-top: 1px solid var(--border);">
     <p><strong>Nom :</strong> {{ user.first_name }} {{ user.last_name }}</p>
     <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
     <p><strong>Email :</strong> {{ user.email }}</p>
@@ -12,5 +13,6 @@
         <p><strong>Filière :</strong> {{ user.filiere.nom }} ({{ user.filiere.code }})</p>
         <p><strong>Niveau :</strong> {{ user.niveau.libelle }}</p>
     {% endif %}
+
 </div>
 {% endblock %}

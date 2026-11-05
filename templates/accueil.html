@@ -5,8 +5,12 @@
 <div class="hero">
     <h1>La mémoire pédagogique de votre université</h1>
     <p>Centralisez, consultez et archivez vos syllabus, annales et TD. Ne perdez plus jamais un document académique.</p>
-    <div style="margin-top: 20px;">
-        <a href="{% url 'inscription' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;">Rejoindre CampusShare</a>
-    </div>
+        <div style="margin-top: 20px;">
+            {% if user.is_authenticated %}
+                <a href="{% url 'catalogue' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;">Explorer le catalogue</a>
+            {% else %}
+                <a href="{% url 'inscription' %}" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;">Rejoindre CampusShare</a>
+            {% endif %}
+        </div>
 </div>
 {% endblock %}

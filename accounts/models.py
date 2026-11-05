@@ -36,6 +36,12 @@ class User(AbstractUser):
         related_name='etudiants',
         verbose_name="Niveau"
     )
+    photo_profil = models.ImageField(
+        upload_to='avatars/', 
+        null=True, 
+        blank=True, 
+        verbose_name="Photo de profil"
+    )
 
     class Meta:
         verbose_name = "Utilisateur"

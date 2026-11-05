@@ -12,4 +12,7 @@ urlpatterns = [
     path('', views.catalogue, name='catalogue'), # La page principale
     path('telecharger/<int:ressource_id>/', views.telecharger_ressource, name='telecharger_ressource'),
     path('dashboard/', views.tableau_de_bord, name='dashboard'),
+    path('signaler/<int:ressource_id>/', views.signaler_ressource, name='signaler_ressource'),
+    path('signalements/', views.liste_signalements, name='liste_signalements'),
+    path('signalements/<int:signalement_id>/<str:action>/', views.traiter_signalement, name='traiter_signalement'),
 ]

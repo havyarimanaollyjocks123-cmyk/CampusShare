@@ -6,20 +6,23 @@ class InscriptionForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'role', 'filiere', 'niveau')
-        widgets = {
-            'role': forms.Select(attrs={'class': 'form-control'}),
-            'filiere': forms.Select(attrs={'class': 'form-control'}),
-            'niveau': forms.Select(attrs={'class': 'form-control'}),
-        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Ajouter la classe CSS 'form-control' à tous les champs automatiquement
+        # On ajoute la classe CSS et on limite la taille de tous les champs
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+            # On limite la saisie à 150 caractères max par sécurité
+            field.widget.attrs['maxlength'] = '150'
+
+        # On applique une limite plus stricte sur les mots de passe (ex: 50 caractères)
+        self.fields['password1'].widget.attrs['maxlength'] = '50'
+        self.fields['password2'].widget.attrs['maxlength'] = '50'
+
 
 class ConnexionForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['maxlength'] = '150' # Sécurité pour la connexion

@@ -63,14 +63,29 @@
                 {% endif %}
                 
                 <h3 style="margin-top: 1rem; font-size: 1.2rem;">{{ ressource.titre }}</h3>
-                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.2rem;">
                     {{ ressource.matiere.nom }} • {{ ressource.annee_academique }}
+                </p>
+                <p style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 1rem;">
+                    Publié le {{ ressource.date_depot|date:"d/m/Y" }} par {{ ressource.depose_par.username }}
                 </p>
             </div>
             
+            <!-- Zone des boutons en bas -->
             <div style="border-top: 1px solid var(--border); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 0.8rem; color: var(--text-light);">⬇️ {{ ressource.nb_telechargements }}</span>
-                <a href="{% url 'telecharger_ressource' ressource.id %}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.9rem;">Télécharger</a>
+                
+                <!-- Le compteur à gauche -->
+                <span style="font-size: 0.85rem; font-weight: bold; color: #64748b; background: #f1f5f9; padding: 4px 8px; border-radius: 4px;">
+                    ⬇️ {{ ressource.nb_telechargements }}
+                </span>
+                
+                <!-- Les boutons à droite (Télécharger + Signaler) -->
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <a href="{% url 'telecharger_ressource' ressource.id %}" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.9rem;">Télécharger</a>
+                    
+                    <a href="{% url 'signaler_ressource' ressource.id %}" class="btn btn-secondary" style="padding: 0.4rem 0.6rem; font-size: 0.9rem;" title="Signaler ce document">🚨</a>
+                </div>
+                
             </div>
         </div>
     {% empty %}

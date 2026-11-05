@@ -36,6 +36,40 @@ body {
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
+
+/* Le bouton gris qui contient l'avatar */
+.dropbtn {
+    background-color: var(--secondary);
+    color: var(--text-dark);
+    padding: 4px 12px; /* Un peu moins de padding en haut/bas */
+    border: none;
+    border-radius: 20px; /* Bords bien arrondis comme un pilule */
+    cursor: pointer;
+    font-weight: 500;
+    display: flex;
+    align-items: center; /* Centre l'avatar et le texte verticalement */
+    gap: 8px; /* Espace entre l'avatar et le texte */
+    transition: background 0.2s;
+}
+
+.dropbtn:hover {
+    background-color: var(--border);
+}
+
+/* Le cercle coloré avec l'initiale */
+.avatar {
+    width: 32px;
+    height: 32px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50%; /* Rend le carré parfaitement rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
@@ -202,3 +236,4 @@ footer {
 .mt-3 { margin-top: 1rem; }
 a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
+

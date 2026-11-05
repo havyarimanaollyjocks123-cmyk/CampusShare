@@ -12,6 +12,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
+from .models import Signalement
 
 
 @login_required
@@ -120,10 +121,17 @@ def file_attente(request):
         messages.error(request, "Action non autorisée.")
         return redirect('accueil')
     
-    # Récupérer uniquement les ressources en attente
+    # Récupérer les ressources en attente
     ressources = Ressource.objects.filter(statut=Ressource.Statut.EN_ATTENTE).order_by('-date_depot')
+    
+    # FILTRAGE SELON LE RÔLE :
+    if request.user.role == 'DELEGUE' and not request.user.is_superuser:
+        # Un délégué ne voit QUE les ressources de sa filière ET de son niveau
+        ressources = ressources.filter(filiere=request.user.filiere, niveau=request.user.niveau)
+    
+    # L'admin (ou superuser) voit tout (pas de filtre appliqué)
+    
     return render(request, 'catalog/moderation.html', {'ressources': ressources})
-
 
 # Valider ou rejeter la ressource
 
@@ -133,6 +141,12 @@ def action_moderation(request, ressource_id, action):
         return redirect('accueil')
         
     ressource = get_object_or_404(Ressource, id=ressource_id)
+
+    # SÉCURITÉ : Vérifier que le délégué modère bien sa zone
+    if request.user.role == 'DELEGUE' and not request.user.is_superuser:
+        if ressource.filiere != request.user.filiere or ressource.niveau != request.user.niveau:
+            messages.error(request, "Vous ne pouvez pas modérer une ressource d'une autre filière ou d'un autre niveau.")
+            return redirect('file_attente')
     
     if action == 'valider':
         ressource.statut = Ressource.Statut.PUBLIE
@@ -227,3 +241,55 @@ def tableau_de_bord(request):
         'en_attente': en_attente,
         'total_telechargements': total_telechargements,
     })
+
+
+   # Signaler le document
+
+
+@login_required
+def signaler_ressource(request, ressource_id):
+    ressource = get_object_or_404(Ressource, id=ressource_id)
+    
+    if request.method == 'POST':
+        motif = request.POST.get('motif')
+        commentaire = request.POST.get('commentaire', '')
+        
+        # Création du signalement
+        Signalement.objects.create(
+            ressource=ressource,
+            signale_par=request.user,
+            motif=motif,
+            commentaire=commentaire
+        )
+        messages.warning(request, "Votre signalement a bien été pris en compte. L'administrateur va l'examiner.")
+        return redirect('catalogue')
+        
+    return render(request, 'catalog/signaler.html', {'ressource': ressource})
+
+@login_required
+def liste_signalements(request):
+    if request.user.role != 'ADMIN' and not request.user.is_superuser:
+        return redirect('accueil')
+    
+    signalements = Signalement.objects.filter(traite=False).order_by('-date')
+    return render(request, 'catalog/signalements.html', {'signalements': signalements})
+
+@login_required
+def traiter_signalement(request, signalement_id, action):
+    if request.user.role != 'ADMIN' and not request.user.is_superuser:
+        return redirect('accueil')
+        
+    signalement = get_object_or_404(Signalement, id=signalement_id)
+    
+    if action == 'retirer':
+        # On retire la ressource du catalogue
+        signalement.ressource.statut = Ressource.Statut.RETIRE
+        signalement.ressource.save()
+        messages.success(request, "La ressource a été retirée du catalogue.")
+    elif action == 'ignorer':
+        messages.info(request, "Le signalement a été ignoré.")
+    # Dans les deux cas, on marque le signalement comme traité
+    signalement.traite = True
+    signalement.save()
+    
+    return redirect('liste_signalements')
