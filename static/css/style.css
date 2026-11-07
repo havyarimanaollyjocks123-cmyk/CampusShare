@@ -237,3 +237,91 @@ footer {
 a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+
+/* =========================================
+   MEDIA QUERIES POUR LE RESPONSIVE (Mobile & Tablette)
+   ========================================= */
+
+/* TABLETTES (Écrans jusqu'à 992px) */
+@media (max-width: 992px) {
+    .container {
+        margin: 1.5rem auto;
+    }
+    .hero h1 {
+        font-size: 2rem;
+    }
+}
+
+/* SMARTPHONES ET PETITES TABLETTES (Écrans jusqu'à 768px) */
+@media (max-width: 768px) {
+    /* 1. La barre de navigation passe en colonne */
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap; /* Permet aux liens de passer à la ligne */
+        justify-content: center;
+        width: 100%;
+        gap: 0.8rem;
+    }
+
+    /* On cache le texte des boutons pour gagner de la place */
+    .nav-item {
+        font-size: 0.9rem;
+    }
+
+    /* 2. Les formulaires de recherche s'empilent */
+    .form-card form {
+        grid-template-columns: 1fr !important; /* Force une seule colonne */
+    }
+
+    /* 3. Le titre de l'accueil est plus petit */
+    .hero {
+        padding: 2rem 1rem;
+    }
+    .hero h1 {
+        font-size: 1.6rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+
+    /* 4. Ajustement du menu déroulant */
+    .dropdown {
+        margin-left: 0 !important;
+    }
+    .dropbtn {
+        padding: 0.4rem 0.8rem;
+    }
+
+    /* 5. Ajustement de la grille du catalogue */
+    /* (La grille avec auto-fill fera déjà le travail, 
+       mais on s'assure que les cartes prennent toute la largeur) */
+    div[style*="grid-template-columns: repeat(auto-fill"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* TRÈS PETITS ÉCRANS (Jusqu'à 480px) */
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.3rem;
+    }
+    
+    .form-card {
+        padding: 1.2rem;
+    }
+
+    /* Sur les téléphones, on cache les éléments moins importants du menu */
+    .nav-item {
+        margin-right: 0;
+    }
+    
+    .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}
